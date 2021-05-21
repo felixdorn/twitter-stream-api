@@ -29,21 +29,24 @@ class TwitterStream
         $this->streamConnection = $this->connectToFilteredStream($sets);
 
         while (!$this->streamConnection->eof()) {
-            $char  = $this->streamConnection->read(2);
-            $tweet = $char;
+            $char = $this->streamConnection->read(2);
+            $input = $char;
 
             while ($char !== "\r\n") {
                 $char = $this->streamConnection->read(2);
-                $tweet .= $char;
+                $input .= $char;
             }
 
-            $tweet = trim($tweet);
+            $input = trim($input);
 
-            if (empty($tweet)) {
+            if (empty($input)) {
                 continue;
             }
 
-            yield json_decode($tweet, true, 512, JSON_THROW_ON_ERROR);
+            $tweets = explode("\r\n", $input);
+            foreach($tweets AS $tweet) {
+                yield json_decode($tweet, true, 512, JSON_THROW_ON_ERROR);
+            }
         }
     }
 
