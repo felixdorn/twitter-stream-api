@@ -30,20 +30,20 @@ class TwitterStream
 
         while (!$this->streamConnection->eof()) {
             $char = $this->streamConnection->read(2);
-            $input = $char;
+            $tweets = $char;
 
             while ($char !== "\r\n") {
                 $char = $this->streamConnection->read(2);
-                $input .= $char;
+                $tweets .= $char;
             }
 
-            $input = trim($input);
+            $tweets = trim($tweets);
 
-            if (empty($input)) {
+            if (empty($tweets)) {
                 continue;
             }
 
-            $tweets = explode("\r\n", $input);
+            $tweets = explode("\r\n", $tweets);
             foreach($tweets AS $tweet) {
                 yield json_decode($tweet, true, 512, JSON_THROW_ON_ERROR);
             }
