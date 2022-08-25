@@ -11,7 +11,7 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class TwitterStream implements StreamManager
 {
-    public int $received                   = 0;
+    protected int $received                   = 0;
     protected ?ResponseInterface $response = null;
     protected ?StreamInterface $stream     = null;
     private int $tweetLimit                = PHP_INT_MAX;
