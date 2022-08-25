@@ -2,15 +2,15 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use RWC\TwitterStream\Generator\Generator;
-use RWC\TwitterStream\Generator\ParameterizedOperator;
+use Felix\TwitterStream\Generator\Generator;
+use Felix\TwitterStream\Generator\ParameterizedOperator;
 
 $cases = Generator::cases();
 
 $boilerplate = <<<EOF
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream\Rule;
 
 /**
 %s

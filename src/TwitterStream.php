@@ -1,49 +1,82 @@
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream;
 
-use JsonCollectionParser\Parser;
+use Felix\TwitterStream\Contracts\StreamManager;
+use JsonCollectionParser\Listener;
+use JsonCollectionParser\Stream\DataStream;
+use JsonStreamingParser\Parser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-abstract class TwitterStream
+abstract class TwitterStream implements StreamManager
 {
-    protected int $received                = 0;
+    public int $received                   = 0;
     protected ?ResponseInterface $response = null;
     protected ?StreamInterface $stream     = null;
+    private int $tweetLimit                = PHP_INT_MAX;
+    private int $backfill                  = 0;
+    private array $fields                  = [];
+    private array $expansions              = [];
+    private int $createdAt;
+    private ?Parser $parser = null;
+    private int $bufferSize = 85;
 
-    private int $backfill = 0;
-    /** @var string[] */
-    private array $fields = [];
-    /** @var string[] */
-    private array $expansions = [];
-
-    public function listen(Connection $connection, callable $callback): void
+    public function createdAt(): int
     {
-        $response = $connection->request('GET', $this->toURL(), ['stream' => true]);
-        $parser   = new Parser();
-        $parser->parseAsObjects(
-            $response->getBody(),
-            function (object $item) use ($callback) {
-                $this->received++;
+        return $this->createdAt;
+    }
 
-                $callback(...)->call($this, $item);
-            }
+    public function withBufferSize(int $size): static
+    {
+        $this->bufferSize = $size;
+
+        return $this;
+    }
+
+    public function withTweetLimit(int $limit): static
+    {
+        $this->tweetLimit = $limit;
+
+        return $this;
+    }
+
+    public function listen(TwitterConnection $connection, callable $callback): void
+    {
+        $this->response  = $connection->request('GET', $this->toURL(), ['stream' => true]);
+        $this->stream    = $this->response->getBody();
+        $this->createdAt = hrtime()[0];
+
+        $this->parser = new Parser(
+            DataStream::get($this->response),
+            new Listener(
+                function (object $item) use ($callback) {
+                    if ($this->tweetLimit <= $this->received) {
+                        $this->stopListening();
+
+                        return;
+                    }
+
+                    $callback($item, $this);
+
+                    $this->received++;
+                },
+                false
+            ),
+            "\r\n",
+            false,
+            $this->bufferSize
         );
+
+        $this->parser->parse();
     }
 
     public function toURL(): string
     {
         $parameters = [];
 
-        foreach ($this->fields as $field) {
-            [$type, $field] = explode('.', $field);
-
-            if (array_key_exists($type . '.fields', $parameters)) {
-                $parameters[$type . '.fields'] .= ',' . $field;
-            } else {
-                $parameters[$type . '.fields'] = $field;
-            }
+        foreach ($this->fields as $type => $fields) {
+            $parameters[$type . '.fields'] = implode(',', is_array($fields) ? $fields : [$fields]);
         }
 
         if (count($this->expansions) > 0) {
@@ -59,16 +92,22 @@ abstract class TwitterStream
 
     abstract public function endpoint(): string;
 
-    public function __destruct()
-    {
-        $this->stopListening();
-    }
-
     public function stopListening(): self
     {
+        $this->parser?->stop();
         $this->stream?->close();
 
         return $this;
+    }
+
+    public function timeElapsedInSeconds(): float|int
+    {
+        return max(0, hrtime()[0] - $this->createdAt);
+    }
+
+    public function __destruct()
+    {
+        $this->stopListening();
     }
 
     public function backfill(int $minutes): self
@@ -85,9 +124,9 @@ abstract class TwitterStream
         return $this;
     }
 
-    public function fields(string ...$fields): self
+    public function fields(array $fields): self
     {
-        $this->fields = [...$this->fields, ...$fields];
+        $this->fields = $fields;
 
         return $this;
     }

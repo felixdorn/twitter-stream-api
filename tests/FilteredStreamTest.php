@@ -1,6 +1,6 @@
 <?php
 
-use RWC\TwitterStream\FilteredStream;
+use Felix\TwitterStream\Streams\FilteredStream;
 
 it('has the correct endpoint', function () {
     $stream = new FilteredStream();

@@ -1,6 +1,6 @@
 <?php
 
-use RWC\TwitterStream\Operators\RawOperator;
+use Felix\TwitterStream\Rule\Operators\RawOperator;
 
 it('can compile', function () {
     $operator = new RawOperator(['someThing']);

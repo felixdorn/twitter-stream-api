@@ -1,6 +1,6 @@
 <?php
 
-namespace RWC\TwitterStream\Generator;
+namespace Felix\TwitterStream\Generator;
 
 /**
  * @codeCoverageIgnore (internal tool)

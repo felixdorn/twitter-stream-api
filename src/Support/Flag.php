@@ -1,7 +1,8 @@
 <?php
 
-namespace RWC\TwitterStream\Support;
+namespace Felix\TwitterStream\Support;
 
+/** @internal */
 class Flag
 {
     public static function has(int $flags, int $flag): bool

@@ -1,6 +1,8 @@
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream\Streams;
+
+use Felix\TwitterStream\TwitterStream;
 
 class FilteredStream extends TwitterStream
 {

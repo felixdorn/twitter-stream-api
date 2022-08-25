@@ -1,12 +1,13 @@
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream\Rule;
 
-use Psr\Http\Message\ResponseInterface;
+use Felix\TwitterStream\TwitterConnection;
+use Felix\TwitterStream\TwitterResponse;
 
 class RuleManager
 {
-    public function __construct(public Connection $connection)
+    public function __construct(public TwitterConnection $connection)
     {
     }
 
@@ -22,30 +23,34 @@ class RuleManager
         ), $rules->getPayload()['data'] ?? []);
     }
 
-    public function save(Rule|string $value, ?string $tag = null): ResponseInterface
+    public function save(Rule|string $value, ?string $tag = null, bool $dryRun = false): TwitterResponse
     {
         if ($value instanceof Rule) {
-            return $this->saveMany([$value]);
+            return $this->saveMany([$value], $dryRun);
         }
 
-        return $this->saveMany([new Rule($value, $tag)]);
+        return $this->saveMany([new Rule($value, $tag)], $dryRun);
     }
 
-    public function saveMany(array $rules): TwitterResponse
+    /** @param Rule[] $rules */
+    public function saveMany(array $rules, bool $dryRun = false): TwitterResponse
     {
-        return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules', [
+        $dryRun = $dryRun ? '?dry_run=true' : '';
+
+        return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules' . $dryRun, [
             'body' => [
                 'add' => array_map(fn ($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
             ],
         ]);
     }
 
-    public function delete(string $id): ResponseInterface
+    public function delete(string $id): TwitterResponse
     {
         return $this->deleteMany([$id]);
     }
 
-    public function deleteMany(array $ids): ResponseInterface
+    /** @param string[] $ids */
+    public function deleteMany(array $ids): TwitterResponse
     {
         return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules', [
             'body' => [
@@ -57,5 +62,10 @@ class RuleManager
     public function new(string $tag = ''): RuleBuilder
     {
         return new RuleBuilder($this, $tag);
+    }
+
+    public function validate(string $rule): array
+    {
+        return $this->save($rule, dryRun: true)->getPayload();
     }
 }

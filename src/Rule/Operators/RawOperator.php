@@ -1,9 +1,11 @@
 <?php
 
-namespace RWC\TwitterStream\Operators;
+namespace Felix\TwitterStream\Rule\Operators;
 
+/** @internal */
 class RawOperator extends Operator
 {
+    /** @param scalar[] $raw */
     public function __construct(
         protected array $raw
     ) {

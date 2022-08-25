@@ -1,19 +1,20 @@
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream;
 
+use Felix\TwitterStream\Exceptions\TwitterException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use RWC\TwitterStream\Exceptions\TwitterException;
 
 class TwitterResponse implements ResponseInterface
 {
+    /** @var mixed[] */
     protected array $payload = [];
 
     public function __construct(protected ResponseInterface $response)
     {
-        // The response is a stream.
+        // Is the response a stream?
         if ($response->getBody()->getMetadata('wrapper_type') === 'http') {
             return;
         }
@@ -114,6 +115,7 @@ class TwitterResponse implements ResponseInterface
         return $this->response->getReasonPhrase();
     }
 
+    /** @return mixed[] */
     public function getPayload(): array
     {
         return $this->payload;

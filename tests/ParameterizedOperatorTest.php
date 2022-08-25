@@ -1,7 +1,7 @@
 <?php
 
-use RWC\TwitterStream\Operators\Operator;
-use RWC\TwitterStream\Operators\ParameterizedOperator;
+use Felix\TwitterStream\Rule\Operators\Operator;
+use Felix\TwitterStream\Rule\Operators\ParameterizedOperator;
 
 it('can compile', function () {
     $op = new ParameterizedOperator(0, 'name', ['value1', 'value2']);

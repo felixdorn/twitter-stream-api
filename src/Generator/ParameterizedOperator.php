@@ -1,8 +1,8 @@
 <?php
 
-namespace RWC\TwitterStream\Generator;
+namespace Felix\TwitterStream\Generator;
 
-use RWC\TwitterStream\Support\Str;
+use Felix\TwitterStream\Support\Str;
 
 /**
  * @codeCoverageIgnore (internal tool)

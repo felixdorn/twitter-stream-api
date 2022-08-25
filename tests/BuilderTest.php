@@ -1,8 +1,9 @@
 <?php
 
+use Felix\TwitterStream\Rule\RuleBuilder;
+use Felix\TwitterStream\Rule\RuleManager;
+use Felix\TwitterStream\TwitterResponse;
 use GuzzleHttp\Psr7\Response;
-use RWC\TwitterStream\RuleBuilder;
-use RWC\TwitterStream\RuleManager;
 
 function query(string $q = '')
 {
@@ -100,7 +101,7 @@ it('can compile has operator using the shorthand', function () {
 
 it('fails if you access an undefined property', function () {
     query('php')->foo;
-})->throws(ErrorException::class, 'Undefined property: RWC\TwitterStream\RuleBuilder::$foo');
+})->throws(ErrorException::class, 'Undefined property: Felix\TwitterStream\Rule\RuleBuilder::$foo');
 
 it('can compile an is operator', function () {
     expect(query('doggo')->is('quote')->compile())->toBe('doggo is:quote');
@@ -182,14 +183,14 @@ it('can compile a sample operator', function () {
 });
 
 it('can be translated to a string', function () {
-    expect((string) query('dogs')->isNotQuote())->toBe('dogs -is:quote');
+    expect((string)query('dogs')->isNotQuote())->toBe('dogs -is:quote');
 });
 
 it('can create the rule', function () {
     $mock = mock(RuleManager::class)
         ->shouldReceive('save')
         ->with('dogs is:quote', 'my-rule')
-        ->andReturn(new Response())
+        ->andReturn(new TwitterResponse(new Response(body: '{}')))
         ->getMock();
 
     $rule = new RuleBuilder($mock, 'my-rule');

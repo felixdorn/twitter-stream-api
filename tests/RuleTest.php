@@ -5,9 +5,9 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use RWC\TwitterStream\Connection;
-use RWC\TwitterStream\Rule;
-use RWC\TwitterStream\RuleManager;
+use Felix\TwitterStream\TwitterConnection;
+use Felix\TwitterStream\Rule\Rule;
+use Felix\TwitterStream\Rule\RuleManager;
 
 function mockTwitter(&$container): RuleManager
 {
@@ -20,7 +20,7 @@ function mockTwitter(&$container): RuleManager
 
     $client = new Client(['handler' => $handlerStack]);
 
-    $connection = new Connection('some token');
+    $connection = new TwitterConnection('some token');
     $connection->setClient($client);
 
     return new RuleManager($connection);

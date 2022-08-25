@@ -1,11 +1,13 @@
 <?php
 
-namespace RWC\TwitterStream\Operators;
+namespace Felix\TwitterStream\Rule\Operators;
 
-use RWC\TwitterStream\Support\Flag;
+use Felix\TwitterStream\Support\Flag;
 
+/** @internal */
 class NamedOperator extends Operator
 {
+    /** @param string[] $values */
     public function __construct(
         protected int $flags,
         protected string $name,

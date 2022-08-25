@@ -1,7 +1,8 @@
 <?php
 
-namespace RWC\TwitterStream\Support;
+namespace Felix\TwitterStream\Support;
 
+/** @internal */
 class Str
 {
     public static function snake(string $value, string $delimiter = '_'): string

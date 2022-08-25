@@ -1,8 +1,8 @@
 <?php
 
-use RWC\TwitterStream\Operators\GroupOperator;
-use RWC\TwitterStream\Operators\Operator;
-use RWC\TwitterStream\RuleBuilder;
+use Felix\TwitterStream\Rule\Operators\GroupOperator;
+use Felix\TwitterStream\Rule\Operators\Operator;
+use Felix\TwitterStream\Rule\RuleBuilder;
 
 it('can compile', function () {
     $op = new GroupOperator(

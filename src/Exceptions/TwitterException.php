@@ -1,6 +1,6 @@
 <?php
 
-namespace RWC\TwitterStream\Exceptions;
+namespace Felix\TwitterStream\Exceptions;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -18,11 +18,21 @@ class TwitterException extends Exception
 
     public static function fromResponse(ResponseInterface $response): TwitterException
     {
-        $response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $decoded = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $error = $response['errors'][0];
+        if ($decoded['status'] === 429) {
+            $reset = implode('', $response->getHeader('x-rate-limit-reset'));
 
-        return new self($error['message'], $response);
+            if ($reset == '') {
+                $reset = 'unknown';
+            }
+
+            return new self('Too many requests (reset in: ' . $reset . ').');
+        }
+
+        $error = $decoded['errors'][0];
+
+        return new self($error['message'], $decoded);
     }
 
     public static function fromPayload(array $payload): TwitterException

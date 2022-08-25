@@ -1,12 +1,12 @@
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream;
 
+use Felix\TwitterStream\Exceptions\TwitterException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use RWC\TwitterStream\Exceptions\TwitterException;
 
-class Connection
+class TwitterConnection
 {
     protected Client $client;
 
@@ -24,6 +24,9 @@ class Connection
         return $this->client;
     }
 
+    /**
+     * @param array<string, mixed> $options see \GuzzleHttp\RequestOptions
+     */
     public function request(string $method, string $uri = '', array $options = []): TwitterResponse
     {
         if (is_array($options['body'] ?? null)) {

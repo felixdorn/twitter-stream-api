@@ -1,7 +1,8 @@
 <?php
 
-namespace RWC\TwitterStream\Operators;
+namespace Felix\TwitterStream\Rule\Operators;
 
+/** @internal */
 abstract class Operator
 {
     public const OR_OPERATOR  = 1 << 0;

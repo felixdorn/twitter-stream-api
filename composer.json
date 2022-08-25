@@ -1,15 +1,7 @@
 {
   "name": "redwebcreation/twitter-stream-api",
   "description": "Consume the Twitter Stream API in real-time.",
-  "keywords": [
-    "redwebcreation",
-    "phirehose-replacement",
-    "phirehose",
-    "php",
-    "twitter",
-    "streaming",
-    "api"
-  ],
+  "keywords": ["phirehose", "php", "twitter", "streaming", "api"],
   "type": "library",
   "homepage": "https://github.com/redwebcreation/phirehose",
   "license": "MIT",
@@ -27,7 +19,7 @@
   },
   "autoload": {
     "psr-4": {
-      "RWC\\TwitterStream\\": "src/"
+      "Felix\\TwitterStream\\": "src/"
     }
   },
   "scripts": {
@@ -40,7 +32,7 @@
       "@test:types",
       "@test:unit"
     ],
-    "gen:doc": "php generate_phpdoc.php > src/_RuleBuilder.php",
+    "gen:doc": "php generate_phpdoc.php > src/Rule/_RuleBuilder.php",
     "gen:tests": "php generate_tests.php > tests/GeneratedTests.php"
   },
   "require-dev": {

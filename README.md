@@ -19,20 +19,19 @@ You can install the package via composer:
 composer require redwebcreation/twitter-stream-api
 ```
 
+> **Updating from v2 to v3?** Read the [upgrade guide](UPGRADE.md).
+
 ## Usage
 
 ```php
-use RWC\TwitterStream\Connection;
-use RWC\TwitterStream\FilteredStream;
-use RWC\TwitterStream\VolumeStream;
+use Felix\TwitterStream\TwitterConnection;
+use Felix\TwitterStream\Streams\FilteredStream;
+use Felix\TwitterStream\Streams\VolumeStream;
 
 $twitterStream  = new FilteredStream();
 // or
 $twitterStream  = new VolumeStream();
-
-$connection     = new Connection(
-   bearerToken: '...'
-);
+$connection     = new TwitterConnection(bearerToken: '...');
 $rule           = new RuleManager($connection);
 
 $rule->new(tag: 'cat_filter_1')
@@ -58,9 +57,9 @@ Tweets your stream receives. Rules are saved by Twitter and are persistent.
 ### Client
 
 ```php
-use RWC\TwitterStream\RuleManager;
+use Felix\TwitterStream\Manager;
 
-$rules = new RuleManager($connection);
+$rules = new Manager($connection);
 ```
 
 ### Listing all the rules
@@ -72,7 +71,7 @@ $rules->all();
 #### Saving a rule
 
 ```php
-use RWC\TwitterStream\Rule;
+use Felix\TwitterStream\Rule;
 
 $rules->save(
   'cat has:image',
@@ -93,7 +92,7 @@ If no tag is provided, it fallbacks to the rule itself.
 #### Deleting a rule
 
 ```php
-use RWC\TwitterStream\Rule;
+use Felix\TwitterStream\Rule;
 
 $rules->delete('THE_RULE_ID_HERE');
 
@@ -110,7 +109,7 @@ $rules->deleteMany([
 ## Rule Builder
 
 ```php
-use RWC\TwitterStream\RuleBuilder;
+use Felix\TwitterStream\Rule\RuleBuilder;
 
 $rules->new()
     ->query('php')
@@ -126,7 +125,7 @@ $rules->new()
 You can negate an operator using the magic property `not`.
 
 ```php
-use RWC\TwitterStream\RuleBuilder;
+use Felix\TwitterStream\Rule\RuleBuilder;
 
 $rules->new()
     ->query('#php')
@@ -140,7 +139,7 @@ $rules->new()
 You can also group operators together :
 
 ```php
-use RWC\TwitterStream\RuleBuilder;
+use Felix\TwitterStream\Rule\RuleBuilder;
 
 $rules->query('#laravel')
     ->group(function (RuleBuilder $builder) {

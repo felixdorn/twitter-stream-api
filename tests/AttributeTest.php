@@ -1,8 +1,8 @@
 <?php
 
-use RWC\TwitterStream\Operators\NamedOperator;
-use RWC\TwitterStream\Operators\Operator;
 
+use Felix\TwitterStream\Rule\Operators\NamedOperator;
+use Felix\TwitterStream\Rule\Operators\Operator;
 
 it('correctly joins many arguments', function (int $kind, string $expected) {
     $operator = new NamedOperator(

@@ -1,16 +1,17 @@
 <?php
 
-namespace RWC\TwitterStream;
+namespace Felix\TwitterStream\Rule;
 
+use Felix\TwitterStream\Exceptions\TwitterException;
+use Felix\TwitterStream\Rule\Operators\GroupOperator;
+use Felix\TwitterStream\Rule\Operators\NamedOperator;
+use Felix\TwitterStream\Rule\Operators\Operator;
+use Felix\TwitterStream\Rule\Operators\Operator as OperatorContract;
+use Felix\TwitterStream\Rule\Operators\ParameterizedOperator;
+use Felix\TwitterStream\Rule\Operators\RawOperator;
+use Felix\TwitterStream\Support\Flag;
+use Felix\TwitterStream\Support\Str;
 use Psr\Http\Message\ResponseInterface;
-use RWC\TwitterStream\Operators\GroupOperator;
-use RWC\TwitterStream\Operators\NamedOperator;
-use RWC\TwitterStream\Operators\Operator;
-use RWC\TwitterStream\Operators\Operator as OperatorContract;
-use RWC\TwitterStream\Operators\ParameterizedOperator;
-use RWC\TwitterStream\Operators\RawOperator;
-use RWC\TwitterStream\Support\Flag;
-use RWC\TwitterStream\Support\Str;
 use SplStack;
 
 /**
@@ -65,6 +66,7 @@ class RuleBuilder extends _RuleBuilder
         return $this;
     }
 
+    /** @param mixed[] $arguments */
     public function __call(string $name, array $arguments): self
     {
         $flags     = 0;
@@ -113,10 +115,6 @@ class RuleBuilder extends _RuleBuilder
         });
     }
 
-    /**
-     * A very descriptive name! This method recursively flattens an array.
-     * If a string with spaces is found within the array, it quotes it.
-     */
     private static function flattenArgumentsAndQuoteStrings(array $array): array
     {
         $result = [];
@@ -175,5 +173,10 @@ class RuleBuilder extends _RuleBuilder
 
         var_dump($this->compile());
         exit;
+    }
+
+    public function validate(): array
+    {
+        return $this->manager?->validate($this->compile()) ?? throw new TwitterException('Manager not set in the rule builder. Are you using it correctly?');
     }
 }

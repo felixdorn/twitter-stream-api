@@ -2,14 +2,13 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use RWC\TwitterStream\Generator\Generator;
+use Felix\TwitterStream\Generator\Generator;
 
 
 echo sprintf(<<<EOF
 <?php
 
-use RWC\TwitterStream\RuleBuilder;
-
+use Felix\TwitterStream\Rule\RuleBuilder;
 /** Do not edit manually; changes will be lost. */
 it('compiles', function (\$value, \$arguments, \$expected) {
     expect((new RuleBuilder())->{\$value}(...\$arguments)->compile())->toBe(\$expected);

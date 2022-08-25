@@ -1,11 +1,12 @@
 <?php
 
-namespace RWC\TwitterStream\Operators;
+namespace Felix\TwitterStream\Rule\Operators;
 
-use RWC\TwitterStream\RuleBuilder;
-use RWC\TwitterStream\Support\Flag;
+use Felix\TwitterStream\Rule\RuleBuilder;
+use Felix\TwitterStream\Support\Flag;
 use SplStack;
 
+/** @internal */
 class GroupOperator extends Operator
 {
     /** @var callable */
@@ -44,6 +45,7 @@ class GroupOperator extends Operator
         }
 
         if (Flag::has($this->flags, self::NOT_OPERATOR)) {
+            /** @var SplStack<Operator> $negatedStack */
             $negatedStack = new SplStack();
             $stub->operators->rewind();
 

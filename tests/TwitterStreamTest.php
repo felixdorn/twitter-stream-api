@@ -1,7 +1,7 @@
 <?php
 
 it('can build a URL', function (int $backfill, array $fields, array $expansions, string $expected) {
-    $stream = new class() extends RWC\TwitterStream\TwitterStream {
+    $stream = new class() extends Felix\TwitterStream\TwitterStream {
         public function endpoint(): string
         {
             return '';
@@ -10,7 +10,7 @@ it('can build a URL', function (int $backfill, array $fields, array $expansions,
 
     $url = $stream
         ->backfill($backfill)
-        ->fields(...$fields)
+        ->fields($fields)
         ->expansions(...$expansions)
         ->toURL();
 
@@ -30,13 +30,17 @@ it('can build a URL', function (int $backfill, array $fields, array $expansions,
     ],
     [
         'backfill_minutes' => 0,
-        'fields'           => ['media.url'],
+        'fields'           => [
+            'media' => 'url'
+        ],
         'expansions'       => [],
         'url'              => 'media.fields=url',
     ],
     [
         'backfill_minutes' => 0,
-        'fields'           => ['media.url', 'media.name'],
+        'fields'           => [
+            'media' => ['url', 'name']
+        ],
         'expansions'       => [],
         'url'              => 'media.fields=url,name',
     ],

@@ -1,6 +1,6 @@
 <?php
 
-use RWC\TwitterStream\VolumeStream;
+use Felix\TwitterStream\Streams\VolumeStream;
 
 it('has the correct endpoint', function () {
     $stream = new VolumeStream();

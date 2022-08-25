@@ -4,5 +4,4 @@ parameters:
     - src
 
   checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false
   reportUnmatchedIgnoredErrors: true
