@@ -12,12 +12,12 @@ use Psr\Http\Message\StreamInterface;
 abstract class TwitterStream implements StreamManager
 {
     protected int $received                   = 0;
-    protected ?ResponseInterface $response = null;
-    protected ?StreamInterface $stream     = null;
-    private int $tweetLimit                = PHP_INT_MAX;
-    private int $backfill                  = 0;
-    private array $fields                  = [];
-    private array $expansions              = [];
+    protected ?ResponseInterface $response    = null;
+    protected ?StreamInterface $stream        = null;
+    private int $tweetLimit                   = PHP_INT_MAX;
+    private int $backfill                     = 0;
+    private array $fields                     = [];
+    private array $expansions                 = [];
     private int $createdAt;
     private ?Parser $parser = null;
     private int $bufferSize = 85;

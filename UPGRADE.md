@@ -37,7 +37,7 @@ We recommend that you simply Find and Replace in the order below to avoid any is
 * `\Felix\TwitterStream\Support\Str` is now marked as internal.
 * `\Felix\TwitterStream\Support\Flag` is now marked as internal.
 
-### Bug Fixes
+### Bug Fixes 
 * 429s errors are now handled correctly (instead of a meta error)
 * $stream->stream and $stream->response now return the stream and response
 * Reduced buffer size to the minimum **drastically increase the "time to first tweet"**, from around 30 seconds to never for small streams to the first moment the tweet is posted.

@@ -1,4 +1,4 @@
-<?php
+q<?php
 
 namespace Felix\TwitterStream\Rule;
 
