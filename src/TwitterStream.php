@@ -3,10 +3,10 @@
 namespace Felix\TwitterStream;
 
 use Felix\TwitterStream\Contracts\StreamManager;
+use Felix\TwitterStream\Parser\Listener;
+use Felix\TwitterStream\Parser\Parser;
 use Felix\TwitterStream\Support\Clock;
-use JsonCollectionParser\Listener;
-use JsonCollectionParser\Stream\DataStream;
-use JsonStreamingParser\Parser;
+use GuzzleHttp\Psr7\StreamWrapper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -32,20 +32,6 @@ abstract class TwitterStream implements StreamManager
         // If used wrong, this could be null.
         /* @phpstan-ignore-next-line */
         return $this->response;
-    }
-
-    public function stream(): StreamInterface
-    {
-        // If used wrong, this could be null.
-        /* @phpstan-ignore-next-line */
-        return $this->stream;
-    }
-
-    public function jsonParser(): Parser
-    {
-        // If used wrong, this could be null.
-        /* @phpstan-ignore-next-line */
-        return $this->parser;
     }
 
     public function createdAt(): int
@@ -78,10 +64,13 @@ abstract class TwitterStream implements StreamManager
         $this->stream    = $this->response->getBody();
         $this->createdAt = Clock::now();
 
+        dump('now');
+
         $this->parser = new Parser(
-            stream: DataStream::get($this->response),
+            stream: StreamWrapper::getResource($this->response->getBody()),
             listener: new Listener(
                 callback: function (object $item) use ($callback) {
+                    dump('in callback');
                     $this->received++;
 
                     $callback($item, $this);
@@ -97,7 +86,13 @@ abstract class TwitterStream implements StreamManager
             bufferSize: $this->bufferSize
         );
 
-        $this->parser->parse();
+        try {
+            $this->parser->parse();
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            $this->stopListening();
+        }
     }
 
     public function toURL(): string
@@ -118,7 +113,7 @@ abstract class TwitterStream implements StreamManager
 
     public function stopListening(): self
     {
-        $this->parser?->stop();
+        $this->parser?->stopParsing();
         $this->stream?->close();
 
         return $this;

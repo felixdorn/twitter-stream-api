@@ -6,14 +6,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class TwitterException extends \Exception
 {
-    protected function __construct(string $message, ...$args)
+    protected function __construct(string $message)
     {
         parent::__construct($message);
     }
 
     public static function fromResponse(ResponseInterface $response): TwitterException
     {
-        if ($response->getStatusCode() === 429) {
+        if ($response->getStatusCode() == 429) {
             return self::handleTooManyRequests($response);
         }
 
@@ -27,8 +27,15 @@ class TwitterException extends \Exception
             );
         }
 
-        if (self::errorIsFromTheAuthAuthService($body)) {
-            return self::handleAuthAuthErrors($response, $body);
+        if ($response->getStatusCode() == 401) {
+            return self::sprintf(
+                'Unauthorized. Is your bearer token correct? (error: %s)',
+                json_encode($body)
+            );
+        }
+
+        if (array_key_exists('title', $body) && array_key_exists('detail', $body)) {
+            return self::handleTitleDetailErrors($body);
         }
 
         // The error doesn't have the expected structure (['errors' => [...]])
@@ -56,25 +63,25 @@ class TwitterException extends \Exception
         return TwitterException::sprintf('Too many requests (reset in: %s).', $reset);
     }
 
-    public static function sprintf(string $message, ...$args): self
+    public static function sprintf(string $message, mixed ...$args): self
     {
         return new self(sprintf($message, ...$args));
     }
 
-    private static function errorIsFromTheAuthAuthService(array $body): bool
+    private static function handleTitleDetailErrors(array $body): self
     {
-        return array_key_exists('status', $body);
-    }
+        $title  = $body['title'];
+        $detail = $body['detail'];
 
-    private static function handleAuthAuthErrors(ResponseInterface $response, array $body): TwitterException
-    {
-        if ($body['status'] == 401 || $response->getStatusCode() == 401) {
-            return TwitterException::sprintf('Unauthorized. (payload: %s)', json_encode($body));
+        // Remove the detail if it's the same as the title
+        if ($title === $detail) {
+            $detail = '';
         }
 
-        return TwitterException::sprintf(
-            'Twitter returned an error that we don\'t know about, please open an issue at https://github.com/felixdorn/twitter-stream-api/issues with the following:  %s',
-            json_encode(['payload' => $body, 'status' => $response->getStatusCode()])
+        return self::sprintf(
+            '%s: %s',
+            $title,
+            $detail
         );
     }
 }

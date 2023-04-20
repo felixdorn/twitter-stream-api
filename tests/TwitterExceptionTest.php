@@ -4,8 +4,12 @@ use Felix\TwitterStream\Exceptions\TwitterException;
 use GuzzleHttp\Psr7\Response;
 
 it('can not be instantiated', function () {
-    new TwitterException();
-})->throws(\Error::class);
+    // use reflection to check that the constructor is not public
+    $reflection = new ReflectionClass(TwitterException::class);
+    $constructor = $reflection->getConstructor();
+
+    expect($constructor->isPublic())->toBeFalse();
+});
 
 it('can create an exception from a message', function () {
     $exception = TwitterException::sprintf('foo %s', 'bar');

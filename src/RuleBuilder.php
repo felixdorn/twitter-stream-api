@@ -196,7 +196,7 @@ class RuleBuilder extends _RuleBuilder
 
     public function validate(): array
     {
-        return $this->manager?->validate($this->compile()) ?? throw new TwitterException('Manager not set in the rule builder. Are you using it correctly?');
+        return $this->manager?->validate($this->compile()) ?? throw TwitterException::sprintf('Manager not set in the rule builder. Are you using it correctly?');
     }
 
     public function build(): Rule

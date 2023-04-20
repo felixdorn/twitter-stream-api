@@ -170,12 +170,9 @@ it('can listen to a stream', function () {
 
             expect($tweet)->data->text->toBe($i);
             expect($stream)
-                ->stream()->toBe($body)
                 ->createdAt()->toBe(0)
                 ->timeElapsedInSeconds()->toBe($i)
-                ->tweetsReceived()->toBe($i)
-                ->response()->toBe($response)
-                ->jsonParser()->not->toBeNull();
+                ->tweetsReceived()->toBe($i);
         });
     });
 

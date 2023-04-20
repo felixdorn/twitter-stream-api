@@ -2,7 +2,6 @@
 
 namespace Felix\TwitterStream;
 
-use BadMethodCallException;
 use Felix\TwitterStream\Exceptions\TwitterException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -22,8 +21,8 @@ class TwitterResponse implements ResponseInterface
 
         $payload = json_decode($response->getBody()->getContents(), true, flags: JSON_THROW_ON_ERROR);
 
-        # We parse the payload twice, once to check if it's an error, and once to
-        # handle it. It's better this way.
+        // We parse the payload twice, once to check if it's an error, and once to
+        // handle it. It's better this way.
         if (array_key_exists('errors', $payload)) {
             throw TwitterException::fromResponse($response);
         }
@@ -41,37 +40,37 @@ class TwitterResponse implements ResponseInterface
         return $this->response;
     }
 
-    public function getProtocolVersion()
+    public function getProtocolVersion(): string
     {
         return $this->response->getProtocolVersion();
     }
 
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->response->getHeaders();
     }
 
-    public function hasHeader($name)
+    public function hasHeader($name): bool
     {
         return $this->response->hasHeader($name);
     }
 
-    public function getHeader($name)
+    public function getHeader($name): array
     {
         return $this->response->getHeader($name);
     }
 
-    public function getHeaderLine($name)
+    public function getHeaderLine($name): string
     {
         return $this->response->getHeaderLine($name);
     }
 
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->response->getStatusCode();
     }
 
-    public function getReasonPhrase()
+    public function getReasonPhrase(): string
     {
         return $this->response->getReasonPhrase();
     }
@@ -83,38 +82,38 @@ class TwitterResponse implements ResponseInterface
     }
 
     /** @codeCoverageIgnore */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion($version): self
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): self
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value): self
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
-    public function withoutHeader($name)
+    public function withoutHeader($name): self
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): self
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
-    public function withStatus($code, $reasonPhrase = '')
+    public function withStatus($code, $reasonPhrase = ''): self
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 }

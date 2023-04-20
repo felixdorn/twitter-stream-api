@@ -74,10 +74,6 @@ $stream = new \Felix\TwitterStream\Streams\FilteredStream();
 #### For advanced use
 
 * `response(): Psr\Http\Message\ResponseInterface` - The response sent by Twitter
-* `stream(): Psr\Http\Message\StreamInterface` - The response's body. A reference of this object is passed to the JSON
-  parser.
-* `jsonParser(): JsonStreamingParser\Parser` - The JSON parser that parses incoming data from the stream. Holds a
-  reference to the response's body.
 
 ### Listening to a stream
 

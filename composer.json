@@ -15,7 +15,7 @@
   "require": {
     "php": "^8.1",
     "guzzlehttp/guzzle": "^7.3",
-    "maxakawizard/json-collection-parser": "^1.8"
+    "psr/http-message": "^2.0"
   },
   "autoload": {
     "psr-4": {
