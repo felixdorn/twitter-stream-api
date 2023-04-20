@@ -23,6 +23,6 @@ class Flags
 
     public static function zero(): self
     {
-        return new static(0);
+        return new self(0);
     }
 }
