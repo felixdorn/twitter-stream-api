@@ -141,9 +141,11 @@ it('can pass raw strings to be compiled as is', function () {
     expect(query()->raw('hello')->andRaw('world')->compile())->toBe('hello world');
 });
 
-
-
-
+it('can pass an array of raw strings to be compiled as is', function () {
+    expect(query()->raw(['hello', 'world'])->compile())->toBe('hello world');
+    expect(query()->raw(['hello', 'world'])->orRaw(['foo', 'bar'])->compile())->toBe('hello world OR foo bar');
+    expect(query()->raw(['hello', 'world'])->andRaw(['foo', 'bar'])->compile())->toBe('hello world foo bar');
+});
 
 it('can compile a negated nullcast operator', function () {
     expect(query('"mobile games"')->notNullCast()->compile())->toBe('"mobile games" -is:nullcast');
@@ -176,7 +178,7 @@ it('can compile a sample operator', function () {
 });
 
 it('can be translated to a string', function () {
-    expect((string) query('dogs')->isNotQuote())->toBe('dogs -is:quote');
+    expect((string)query('dogs')->isNotQuote())->toBe('dogs -is:quote');
 });
 
 it('can create the rule', function () {
@@ -206,7 +208,7 @@ it('can validate a rule without creating it', function () {
 });
 
 it('can return a Rule object', function () {
-    $rule  = new RuleBuilder(null, 'my tag');
+    $rule = new RuleBuilder(null, 'my tag');
     $built = $rule->raw('tip')->isVerified()->build();
 
     expect($built->value)->toBe('tip is:verified');

@@ -31,6 +31,7 @@ use Psr\Http\Message\ResponseInterface;
  * @method self notBoundingBox(string $westLongitude, string $southLatitude, string $eastLongitude, string $northLatitude)
  * @method self orRaw(string|array $property)
  * @method self andRaw(string|array $property)
+ * @method self raw(string|array $property)
  * @method self andNotNullcast()
  * @method self orNotNullcast()
  * @method self group(callable $callable)
