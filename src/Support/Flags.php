@@ -20,4 +20,9 @@ class Flags
 
         return $this;
     }
+
+    public static function zero(): self
+    {
+        return new static(0);
+    }
 }

@@ -2,10 +2,9 @@
 
 namespace Felix\TwitterStream\Exceptions;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 
-class TwitterException extends Exception
+class TwitterException extends \Exception
 {
     public array $raw;
 

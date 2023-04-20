@@ -136,7 +136,14 @@ it('can compile has operator using the shorthand method', function () {
 
 it('can pass raw strings to be compiled as is', function () {
     expect(query()->raw('hello')->raw('world')->compile())->toBe('hello world');
+    # Test that orRaw works
+    expect(query()->raw('hello')->orRaw('world')->compile())->toBe('hello OR world');
+    expect(query()->raw('hello')->andRaw('world')->compile())->toBe('hello world');
 });
+
+
+
+
 
 it('can compile a negated nullcast operator', function () {
     expect(query('"mobile games"')->notNullCast()->compile())->toBe('"mobile games" -is:nullcast');

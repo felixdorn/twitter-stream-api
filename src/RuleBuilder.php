@@ -2,7 +2,6 @@
 
 namespace Felix\TwitterStream;
 
-use BadMethodCallException;
 use Felix\TwitterStream\Exceptions\TwitterException;
 use Felix\TwitterStream\Operators\BoundingBoxOperator;
 use Felix\TwitterStream\Operators\CountOperator;
@@ -16,7 +15,6 @@ use Felix\TwitterStream\Operators\SampleOperator;
 use Felix\TwitterStream\Support\Flags;
 use Felix\TwitterStream\Support\Str;
 use Psr\Http\Message\ResponseInterface;
-use SplStack;
 
 /**
  * @property RuleBuilder $and
@@ -85,6 +83,7 @@ class RuleBuilder extends _RuleBuilder
         'listed'    => 'listed',
     ];
     public const CUSTOM_OPERATORS = [
+        'raw'          => RawOperator::class,
         'sample'       => SampleOperator::class,
         'null_cast'    => NotNullCastOperator::class,
         'bounding_box' => BoundingBoxOperator::class,
@@ -92,20 +91,20 @@ class RuleBuilder extends _RuleBuilder
         'group'        => GroupOperator::class,
     ];
 
-    /** @param SplStack<Operator> $operators */
+    /** @param \SplStack<Operator> $operators */
     public function __construct(
         public ?RuleManager $manager = null,
         public ?string $tag = null,
-        public SplStack $operators = new SplStack()
+        public \SplStack $operators = new \SplStack()
     ) {
     }
 
     public function __get(string $name): self
     {
         match ($name) {
-            // skip it.
+            // skip it because everything is an AND unless specified
             'and'   => null,
-            'or'    => $this->push(new RawOperator('OR')),
+            'or'    => $this->push(new RawOperator(Flags::zero(), 'OR')),
             default => trigger_error('Undefined property: ' . static::class . '::$' . $name, PHP_MAJOR_VERSION === 8 ? E_USER_WARNING : E_USER_ERROR)
         };
 
@@ -137,7 +136,7 @@ class RuleBuilder extends _RuleBuilder
             $flags->has(Operator::HAS_FLAG) && $name === ''                                 => new KeyValueOperator($flags, 'has', ...$arguments),
 
             $flags->has(Operator::COUNT_FLAG) && array_key_exists($name, self::COUNT_OPERATOR) => new CountOperator($flags, $name, ...$arguments),
-            true                                                                               => throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $methodName))
+            true                                                                               => throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $methodName))
         });
     }
 
@@ -157,13 +156,6 @@ class RuleBuilder extends _RuleBuilder
         }
 
         return [$name, $flags];
-    }
-
-    public function raw(string $raw): self
-    {
-        $this->operators->push(new RawOperator($raw));
-
-        return $this;
     }
 
     public function __toString(): string

@@ -2,7 +2,6 @@
 
 namespace Felix\TwitterStream;
 
-use BadMethodCallException;
 use Felix\TwitterStream\Exceptions\TwitterException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -83,36 +82,36 @@ class TwitterResponse implements ResponseInterface
     /** @codeCoverageIgnore */
     public function withProtocolVersion($version)
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
     public function withAddedHeader($name, $value)
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
     public function withHeader($name, $value)
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
     public function withoutHeader($name)
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
     public function withBody(StreamInterface $body)
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 
     /** @codeCoverageIgnore */
     public function withStatus($code, $reasonPhrase = '')
     {
-        throw new BadMethodCallException('Not implemented');
+        throw new \BadMethodCallException('Not implemented');
     }
 }
