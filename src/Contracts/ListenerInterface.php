@@ -2,6 +2,10 @@
 
 namespace Felix\TwitterStream\Contracts;
 
+/**
+ * Heavily based on salisfy/jsonstreamingparser, all credits go to them.
+ * @see https://github.com/salsify/jsonstreamingparser
+ */
 interface ListenerInterface
 {
     public function startDocument(): void;

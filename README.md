@@ -8,7 +8,7 @@
 
 Consume the Twitter Stream API v2 in real-time.
 
-This package is the spiritual successor of `fennb/phirehose`.
+This package is the spiritual successor of `fennb/phirehose`. It also uses some of `salsify/jsonstreamingparser` and `maxakawizard/json-collection-parser`.
 
 ## Getting started
 

@@ -4,6 +4,10 @@ namespace Felix\TwitterStream\Parser;
 
 use Felix\TwitterStream\Contracts\ListenerInterface;
 
+/**
+ * Heavily based on maxakawizard/json-collection-parser, all credits go to them.
+ * @see https://github.com/MAXakaWIZARD/JsonCollectionParser
+ */
 class Listener implements ListenerInterface
 {
     protected array $stack = [];

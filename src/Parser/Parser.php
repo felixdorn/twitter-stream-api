@@ -7,6 +7,10 @@ use Felix\TwitterStream\Exceptions\ParsingException;
 
 use function chr;
 
+/**
+ * Heavily based on salisfy/jsonstreamingparser, all credits go to them.
+ * @see https://github.com/salsify/jsonstreamingparser
+ */
 class Parser
 {
     protected const STATE_START_DOCUMENT    = 0;
