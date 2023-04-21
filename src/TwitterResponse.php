@@ -21,9 +21,10 @@ class TwitterResponse implements ResponseInterface
 
         $payload = json_decode($response->getBody()->getContents(), true, flags: JSON_THROW_ON_ERROR);
 
-        // We parse the payload twice, once to check if it's an error, and once to
-        // handle it. It's better this way.
         if (array_key_exists('errors', $payload)) {
+            # Rewind the stream so that the exception can read it
+            $response->getBody()->rewind();
+
             throw TwitterException::fromResponse($response);
         }
 
