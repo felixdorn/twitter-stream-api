@@ -15,7 +15,7 @@ class RawOperator implements Operator
         $join = $this->flags->has(Operator::OR_FLAG) ? 'OR ' : '';
 
         if (is_array($this->value)) {
-            $this->value = implode(' ', $this->value);
+            $this->value = implode(' OR ', $this->value);
         }
 
         return $join . $this->value;
