@@ -142,9 +142,9 @@ it('can pass raw strings to be compiled as is', function () {
 });
 
 it('can pass an array of raw strings to be compiled as is', function () {
-    expect(query()->raw(['hello', 'world'])->compile())->toBe('hello world');
-    expect(query()->raw(['hello', 'world'])->orRaw(['foo', 'bar'])->compile())->toBe('hello world OR foo bar');
-    expect(query()->raw(['hello', 'world'])->andRaw(['foo', 'bar'])->compile())->toBe('hello world foo bar');
+    expect(query()->raw(['hello', 'world'])->compile())->toBe('hello OR world');
+    expect(query()->raw(['hello', 'world'])->orRaw(['foo', 'bar'])->compile())->toBe('hello OR world OR foo OR bar');
+    expect(query()->raw(['hello', 'world'])->andRaw(['foo', 'bar'])->compile())->toBe('hello OR world foo OR bar');
 });
 
 it('can compile a negated nullcast operator', function () {

@@ -34,7 +34,7 @@ it('can create an exception from a twitter error', function () {
         ]))
     );
 
-    expect($exception)->getMessage()->toBe(json_encode($error));
+    expect($exception)->getMessage()->toBe(json_encode($error, JSON_PRETTY_PRINT));
 });
 
 it('can handle 429s', function () {
