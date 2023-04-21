@@ -29,10 +29,14 @@ class RuleManager
     }
 
     /** @param string|string[]|Rule[] $ids */
-    public function delete(Rule|string|array $ids): TwitterResponse
+    public function delete(Rule|string|array $ids): ?TwitterResponse
     {
         if (!is_array($ids)) {
             $ids = [$ids];
+        }
+
+        if (count($ids) == 0) {
+            return null;
         }
 
         $ids = array_filter(
