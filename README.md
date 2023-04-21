@@ -42,7 +42,7 @@ $connection = new \Felix\TwitterStream\TwitterConnection(
 
 ### Creating a stream
 
-```phpf
+```php
 $stream = new \Felix\TwitterStream\Streams\VolumeStream();
 // or
 $stream = new \Felix\TwitterStream\Streams\FilteredStream();
@@ -60,9 +60,8 @@ $stream = new \Felix\TwitterStream\Streams\FilteredStream();
 #### For advanced use
 
 * `withBufferSize(int = 85)` - How many bytes should the parser store before trying to parse the JSON, on very
-  high-volume streams, using a larger buffer size is recommended (2500, 10000, depending on the volume). Setting it to a
-  value smaller than 85 is inefficient as the shortest payload returned is at least 85 characters long. Setting to a big
-  value > 2000 on a low-volume stream would result in 0 tweets being processed until there is 2000 bytes in the buffer.
+  high-volume streams, using a larger buffer size is recommended (2500, 10000, depending on the volume). Setting to a big
+  value > 2000 on a low-volume stream would result in 0 tweets being processed until there are enough tweets in the buffer.
 
 ### Interacting with a stream
 
@@ -152,10 +151,10 @@ $rule->saveMany([
 To delete these new rules,
 
 ```php
-$rule->deleteMany([
-	'[A RULE ID]',
-	'[A RULE ID]',
-	'[A RULE ID]',
+$rule->delete([
+	'[RULE ID]',
+	'[RULE ID]',
+	'[RULE ID]',
 ]);
 ```
 
@@ -164,8 +163,10 @@ $rule->deleteMany([
 You can either use the `validate()` method:
 
 ```php
-$rule->validate('cats ha:images');
+# returns a list of errors
+$errors = $rule->validate('cats ha:images');
 ```
+
 
 Or, the `save` and `saveMany` method both have a dryRun parameter:
 
@@ -187,16 +188,17 @@ $rule->new('listening to music')
     ->save();
 ```
 
-You may also use `and[Operator]`, `or[Operator]`.
-
-To add a raw string to the rule, use `raw(string)`
-
-You may call `dump()` or `dd()` to quickly debug your rule.
+You may also use `and[Operator]`, `or[Operator]`, for example `orNotFrom('ID')` or `andBioLocation('location')`.
 
 Compiling this would produce the following:
 ```
 #nowplaying -is:retweet lang:en sample:10
 ```
+
+##### Tips
+* To directly add a string to the rule, use `raw(string)`
+* You may call `dump()` or `dd()` to quickly debug your rule.
+* `and` is the default operator, you may omit it. For example, `andIsNotRetweet()` is the same as `isNotRetweet()`.
 
 ## Fields
 
