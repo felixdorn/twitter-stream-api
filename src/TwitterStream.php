@@ -46,6 +46,10 @@ abstract class TwitterStream implements StreamManager
 
     public function withBufferSize(int $size): static
     {
+        if ($size < 85) {
+            $size = 85;
+        }
+
         $this->bufferSize = $size;
 
         return $this;
