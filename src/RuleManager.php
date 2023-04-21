@@ -13,7 +13,7 @@ class RuleManager
     {
         $rules = $this->connection->request('GET', 'https://api.twitter.com/2/tweets/search/stream/rules');
 
-        return array_map(fn (array $rule) => new Rule(
+        return array_map(fn(array $rule) => new Rule(
             $rule['value'],
             $rule['tag'] ?? null,
             $rule['id'] ?? null,
@@ -23,9 +23,9 @@ class RuleManager
     /**
      * @deprecated Use delete() instead
      */
-    public function deleteMany(Rule|string|array $id): TwitterResponse
+    public function deleteMany(Rule|string|array $ids): TwitterResponse
     {
-        return $this->delete($id);
+        return $this->delete($ids);
     }
 
     /** @param string|string[]|Rule[] $ids */
@@ -39,8 +39,9 @@ class RuleManager
             return null;
         }
 
+
         $ids = array_filter(
-            array_map(fn ($id) => $id instanceof Rule ? $id->id : $id, $ids)
+            array_map(fn($id) => $id instanceof Rule ? $id->id : $id, $ids)
         );
 
         return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules', [
@@ -76,7 +77,7 @@ class RuleManager
 
         return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules' . $dryRun, [
             'body' => [
-                'add' => array_map(fn ($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
+                'add' => array_map(fn($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
             ],
         ]);
     }
