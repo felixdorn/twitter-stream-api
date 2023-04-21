@@ -2,17 +2,21 @@
 
 namespace Felix\TwitterStream\Exceptions;
 
+use Exception;
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 
-class TwitterException extends \Exception
+class TwitterException extends Exception
 {
+    private const PRETTY_PRINT_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
     protected function __construct(string $message)
     {
         parent::__construct($message);
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public static function fromResponse(ResponseInterface $response): TwitterException
     {
@@ -22,7 +26,7 @@ class TwitterException extends \Exception
 
         try {
             $body = json_decode($response->getBody()->getContents(), true, 512, flags: JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             return TwitterException::sprintf(
                 'Twitter response was not valid JSON: %s (error while parsing: %s)',
                 $response->getBody()->getContents(),
@@ -33,7 +37,7 @@ class TwitterException extends \Exception
         if ($response->getStatusCode() == 401) {
             return self::sprintf(
                 'Unauthorized. Is your bearer token correct? (error: %s)',
-                json_encode($body, JSON_PRETTY_PRINT)
+                json_encode($body, self::PRETTY_PRINT_FLAGS)
             );
         }
 
@@ -45,14 +49,14 @@ class TwitterException extends \Exception
         if (!array_key_exists('errors', $body) || count($body['errors']) < 1) {
             return TwitterException::sprintf(
                 'Twitter returns an error unknown to us, please open an issue at https://github.com/felixdorn/twitter-stream-api/issues with the following: ' .
-                json_encode(['payload' => $body, 'status' => $response->getStatusCode()], JSON_PRETTY_PRINT),
+                json_encode(['payload' => $body, 'status' => $response->getStatusCode()], self::PRETTY_PRINT_FLAGS),
             );
         }
 
         // Encoding to JSON here as $decoded['errors'][0] contains an
         // inconsistent object, in the sense that its properties may
         // change from one request to another.
-        return new self(json_encode($body['errors'][0], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+        return new self(json_encode($body['errors'][0], self::PRETTY_PRINT_FLAGS));
     }
 
     private static function handleTooManyRequests(ResponseInterface $response): TwitterException
@@ -73,7 +77,7 @@ class TwitterException extends \Exception
 
     private static function handleTitleDetailErrors(array $body): self
     {
-        $title  = $body['title'];
+        $title = $body['title'];
         $detail = $body['detail'];
 
         // Remove the detail if it's the same as the title
