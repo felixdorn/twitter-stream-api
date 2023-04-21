@@ -21,8 +21,6 @@ class RuleManager
     }
 
     /**
-     * @param Rule|string|array $id
-     * @return TwitterResponse
      * @deprecated Use delete() instead
      */
     public function deleteMany(Rule|string|array $id): TwitterResponse

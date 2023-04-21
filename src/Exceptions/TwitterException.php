@@ -2,11 +2,9 @@
 
 namespace Felix\TwitterStream\Exceptions;
 
-use Exception;
-use JsonException;
 use Psr\Http\Message\ResponseInterface;
 
-class TwitterException extends Exception
+class TwitterException extends \Exception
 {
     protected function __construct(string $message)
     {
@@ -14,9 +12,7 @@ class TwitterException extends Exception
     }
 
     /**
-     * @param ResponseInterface $response
-     * @return TwitterException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public static function fromResponse(ResponseInterface $response): TwitterException
     {
@@ -26,7 +22,7 @@ class TwitterException extends Exception
 
         try {
             $body = json_decode($response->getBody()->getContents(), true, 512, flags: JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             return TwitterException::sprintf(
                 'Twitter response was not valid JSON: %s (error while parsing: %s)',
                 $response->getBody()->getContents(),
@@ -77,7 +73,7 @@ class TwitterException extends Exception
 
     private static function handleTitleDetailErrors(array $body): self
     {
-        $title = $body['title'];
+        $title  = $body['title'];
         $detail = $body['detail'];
 
         // Remove the detail if it's the same as the title

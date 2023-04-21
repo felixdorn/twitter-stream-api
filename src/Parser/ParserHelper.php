@@ -4,6 +4,7 @@ namespace Felix\TwitterStream\Parser;
 
 /**
  * Heavily based on salisfy/jsonstreamingparser, all credits go to them.
+ *
  * @see https://github.com/salsify/jsonstreamingparser
  */
 class ParserHelper
