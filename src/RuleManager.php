@@ -20,31 +20,27 @@ class RuleManager
         ), $rules->getPayload()['data'] ?? []);
     }
 
-    public function save(string $value, ?string $tag = null, bool $dryRun = false): TwitterResponse
+    /**
+     * @param Rule|string|array $id
+     * @return TwitterResponse
+     * @deprecated Use delete() instead
+     */
+    public function deleteMany(Rule|string|array $id): TwitterResponse
     {
-        return $this->saveMany([new Rule($value, $tag)], $dryRun);
+        return $this->delete($id);
     }
 
-    /** @param Rule[] $rules */
-    public function saveMany(array $rules, bool $dryRun = false): TwitterResponse
+    /** @param string|string[]|Rule[] $ids */
+    public function delete(Rule|string|array $ids): TwitterResponse
     {
-        $dryRun = $dryRun ? '?dry_run=true' : '';
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
 
-        return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules' . $dryRun, [
-            'body' => [
-                'add' => array_map(fn ($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
-            ],
-        ]);
-    }
+        $ids = array_filter(
+            array_map(fn ($id) => $id instanceof Rule ? $id->id : $id, $ids)
+        );
 
-    public function delete(string $id): TwitterResponse
-    {
-        return $this->deleteMany([$id]);
-    }
-
-    /** @param string[] $ids */
-    public function deleteMany(array $ids): TwitterResponse
-    {
         return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules', [
             'body' => [
                 'delete' => ['ids' => $ids],
@@ -60,5 +56,26 @@ class RuleManager
     public function validate(string $rule): array
     {
         return $this->save($rule, dryRun: true)->getPayload();
+    }
+
+    public function save(Rule|string $value, ?string $tag = null, bool $dryRun = false): TwitterResponse
+    {
+        if ($value instanceof Rule) {
+            return $this->saveMany([$value], $dryRun);
+        }
+
+        return $this->saveMany([new Rule($value, $tag)], $dryRun);
+    }
+
+    /** @param Rule[] $rules */
+    public function saveMany(array $rules, bool $dryRun = false): TwitterResponse
+    {
+        $dryRun = $dryRun ? '?dry_run=true' : '';
+
+        return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules' . $dryRun, [
+            'body' => [
+                'add' => array_map(fn ($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
+            ],
+        ]);
     }
 }
