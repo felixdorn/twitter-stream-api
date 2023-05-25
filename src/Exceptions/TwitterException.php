@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class TwitterException extends \Exception
 {
-    private const PRETTY_PRINT_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    public const PRETTY_PRINT_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
     protected function __construct(string $message)
     {
