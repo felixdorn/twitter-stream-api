@@ -68,13 +68,10 @@ abstract class TwitterStream implements StreamManager
         $this->stream    = $this->response->getBody();
         $this->createdAt = Clock::now();
 
-        dump('now');
-
         $this->parser = new Parser(
             stream: StreamWrapper::getResource($this->response->getBody()),
             listener: new Listener(
                 callback: function (object $item) use ($callback) {
-                    dump('in callback');
                     $this->received++;
 
                     $callback($item, $this);
