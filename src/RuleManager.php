@@ -13,7 +13,7 @@ class RuleManager
     {
         $rules = $this->connection->request('GET', 'https://api.twitter.com/2/tweets/search/stream/rules');
 
-        return array_map(fn(array $rule) => new Rule(
+        return array_map(fn (array $rule) => new Rule(
             $rule['value'],
             $rule['tag'] ?? null,
             $rule['id'] ?? null,
@@ -39,9 +39,8 @@ class RuleManager
             return null;
         }
 
-
         $ids = array_filter(
-            array_map(fn($id) => $id instanceof Rule ? $id->id : $id, $ids)
+            array_map(fn ($id) => $id instanceof Rule ? $id->id : $id, $ids)
         );
 
         return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules', [
@@ -61,7 +60,7 @@ class RuleManager
         return $this->save($rule, dryRun: true)->getPayload();
     }
 
-    public function save(Rule|string $value, ?string $tag = null, bool $dryRun = false): TwitterResponse
+    public function save(Rule|string $value, string $tag = null, bool $dryRun = false): TwitterResponse
     {
         if ($value instanceof Rule) {
             return $this->saveMany([$value], $dryRun);
@@ -77,7 +76,7 @@ class RuleManager
 
         return $this->connection->request('POST', 'https://api.twitter.com/2/tweets/search/stream/rules' . $dryRun, [
             'body' => [
-                'add' => array_map(fn($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
+                'add' => array_map(fn ($rule) => ['value' => $rule->value, 'tag' => $rule->tag], $rules),
             ],
         ]);
     }

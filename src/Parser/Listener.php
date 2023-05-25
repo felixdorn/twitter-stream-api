@@ -113,9 +113,6 @@ class Listener implements ListenerInterface
         $this->key = $key;
     }
 
-    /**
-     * @param mixed $value
-     */
     public function value($value): void
     {
         $obj = array_pop($this->stack);

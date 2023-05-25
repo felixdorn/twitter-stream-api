@@ -128,11 +128,11 @@ class Parser
         // valid whitespace characters in JSON (from RFC4627 for JSON) include:
         // space, horizontal tab, line feed or new line, and carriage return.
         // thanks: http://stackoverflow.com/questions/16042274/definition-of-whitespace-in-json
-        if ((' ' === $char || "\t" === $char || "\n" === $char || "\r" === $char) &&
-            !(self::STATE_IN_STRING === $this->state ||
-                self::STATE_UNICODE === $this->state ||
-                self::STATE_START_ESCAPE === $this->state ||
-                self::STATE_IN_NUMBER === $this->state)
+        if ((' ' === $char || "\t" === $char || "\n" === $char || "\r" === $char)
+            && !(self::STATE_IN_STRING === $this->state
+                || self::STATE_UNICODE === $this->state
+                || self::STATE_START_ESCAPE === $this->state
+                || self::STATE_IN_NUMBER === $this->state)
         ) {
             // we wrap this so that we don't make a ton of unnecessary function calls
             // unless someone really, really cares about whitespace.
@@ -317,8 +317,8 @@ class Parser
             }
         }
 
-        if (self::UTF16_BOM === $this->utfBom && 2 === $this->charNumber &&
-            $c === \chr(254)) {
+        if (self::UTF16_BOM === $this->utfBom && 2 === $this->charNumber
+            && $c === \chr(254)) {
             $this->utfBom = self::UTF32_BOM;
         }
 
