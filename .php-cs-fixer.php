@@ -2,20 +2,20 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'src')
-    ->append(['.php_cs']);
+    ->append(['.php_cs'])->exclude('src/_RuleBuilder.php');
 
 $rules = [
-    '@Symfony'               => true,
+    '@Symfony' => true,
     'phpdoc_no_empty_return' => false,
-    'array_syntax'           => ['syntax' => 'short'],
-    'yoda_style'             => false,
+    'array_syntax' => ['syntax' => 'short'],
+    'yoda_style' => false,
     'binary_operator_spaces' => [
         'operators' => [
             '=>' => 'align',
-            '='  => 'align',
+            '=' => 'align',
         ],
     ],
-    'concat_space'            => ['spacing' => 'one'],
+    'concat_space' => ['spacing' => 'one'],
     'not_operator_with_space' => false,
 ];
 
